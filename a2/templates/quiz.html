@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<b>Quiz</b>
+
+<form action="{% url 'quizPost' %}" method="post">
+{% csrf_token %}
+
+<h2>Number of ingredients</h2>
+<input type="number" id="num_ingredients" name="num_ingredients" placeholder="Number of ingredients">
+
+<input type="number" id="cocoa_percent" name="cocoa_percent" placeholder="Percent cocoa">
+
+<h2>Ingredients</h2>
+{% for ingredient in ingredients %}
+<input type="checkbox" name="ingredient" id="ingredient{{ forloop.counter }}" value="{{ ingredient }}">
+<label for="ingredient{{ forloop.counter }}">{{ ingredient }}</label><br>
+{% endfor %}
+
+<input type="submit" value="Submit">
+</form>
+
+{% if errorMessage %}<p><strong>{{errorMessage}}</strong></p>{% endif %}
+{% endblock content %}
