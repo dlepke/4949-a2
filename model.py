@@ -5,7 +5,9 @@ from sklearn import metrics
 import pickle
 from sklearn.impute import KNNImputer
 from sklearn.model_selection import train_test_split
-import statsmodels.api as sm
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report
+from sklearn.feature_selection import f_classif
 
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -14,70 +16,55 @@ pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.width', 1000)
 
-df = pd.read_csv('chocolate_bars.csv')
+df = pd.read_csv('heart.csv', skiprows=1, names=(
+    'age', 'sex', 'cp', 'trtbps', 'chol', 'fbs', 'restecg',
+    'thalachh', 'exng', 'oldpeak', 'slp', 'caa', 'thall', 'output'
+))
 
-X = df[['cocoa_percent', 'num_ingredients', 'ingredients']]
+# X = df[['fbs', 'chol', 'restecg', 'trtbps', 'age', 'sex', 'thall', 'slp', 'caa', 'thalachh']]
+X = df.copy()
+del X['output']
 
+X['cp'].replace([0, 1, 2, 3], ['typical_angina', 'atypical_angina', 'non-anginal_pain', 'asymptomatic'], inplace=True)
+X['restecg'].replace([0, 1, 2], ['normal', 'stt_abnormal', 'hypertrophy'], inplace=True)
+X['thall'].replace([0, 1, 2, 3], ['NULL', 'fixed', 'normal', 'reversible'], inplace=True)
+X['slp'].replace([0, 1, 2], ['down', 'flat', 'up'], inplace=True)
 
-def create_dummy_var(X, column_name):
-    imputed_columns = {
-        'B': [],
-        'C': [],
-        'S': [],
-        'S*': [],
-        'Sa': [],
-        'V': [],
-        'L': [],
-    }
-    
-    possible_values = ['B', 'C', 'S', 'S*', 'Sa', 'V', 'L']
+del X['caa']
+del X['oldpeak']
+del X['exng']
+del X['thalachh']
 
-    for i in range(len(X)):
-        row_value = X.loc[i][column_name]
-        
-        for poss in possible_values:
-            # ensure S isn't entered when S* and Sa appear
-            if poss == 'S':
-                check = 'S,'
-            else:
-                check = poss
-            if pd.isna(row_value):
-                imputed_columns[poss].append(0)
-            else:
-                if check in row_value:
-                    imputed_columns[poss].append(1)
-                else:
-                    imputed_columns[poss].append(0)
-        
-    for poss in possible_values:
-        X[poss] = imputed_columns[poss]
-        
-    return X
+X = pd.get_dummies(X)
 
+del X['thall_NULL']
 
-create_dummy_var(X, 'ingredients')
-
-del X['ingredients']
-del X['C']
-
-y = df[['rating']]
-
-# X = pd.get_dummies(X)
 columns = X.columns
+
+y = df[['output']]
 
 imputer = KNNImputer(n_neighbors=5)
 X = imputer.fit_transform(X)
 
 X = pd.DataFrame(X, columns=columns)
 
-X = sm.add_constant(X)
+ffs = f_classif(X, y)
 
-print(X.head())
+features = pd.DataFrame()
+for i in range(len(X.columns)):
+    features = features.append({"feature": X.columns[i], "ffs": ffs[0][i]}, ignore_index=True)
+
+features = features.sort_values(by=['ffs'])
+print(features)
+
+print(X.columns)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
-model = sm.OLS(y_train, X_train).fit()
-#
+model = LogisticRegression(fit_intercept=True, solver='liblinear', random_state=0)
+
+model.fit(X_train, y_train)
+
 # with open('model.pkl', 'wb') as files:
 #     pickle.dump(model, files)
 #
@@ -86,8 +73,6 @@ model = sm.OLS(y_train, X_train).fit()
 
 predictions = model.predict(X_test)
 
-print(predictions.head())
-
-print(model.summary())
-
-print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, predictions)))
+cm = pd.crosstab(y_test['output'], predictions, rownames=['Actual'], colnames=['Predicted'])
+print(cm)
+print(classification_report(y_test, predictions))

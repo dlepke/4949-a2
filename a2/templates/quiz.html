@@ -1,20 +1,56 @@
 {% extends "base.html" %}
 
 {% block content %}
-<b>Quiz</b>
+<b>Heart Health Survey</b>
 
 <form action="{% url 'quizPost' %}" method="post">
 {% csrf_token %}
 
-<h2>Number of ingredients</h2>
-<input type="number" id="num_ingredients" name="num_ingredients" placeholder="Number of ingredients">
+<h2>What is your age?</h2>
+<input type="number" id="age" name="age" placeholder="Age in years" min="20" max="100">
 
-<input type="number" id="cocoa_percent" name="cocoa_percent" placeholder="Percent cocoa">
+<h2>What is your sex?</h2>
+<input type="radio" id="sexf" name="sex" value="F">
+<label for="sexf">Female</label><br>
 
-<h2>Ingredients</h2>
-{% for ingredient in ingredients %}
-<input type="checkbox" name="ingredient" id="ingredient{{ forloop.counter }}" value="{{ ingredient }}">
-<label for="ingredient{{ forloop.counter }}">{{ ingredient }}</label><br>
+<input type="radio" id="sexm" name="sex" value="M">
+<label for="sexm">Male</label><br>
+
+<h2>Is your fasting blood sugar above 120 mg/dl?</h2>
+<input type="radio" id="fbsy" name="fbs" value="1">
+<label for="fbsy">Yes</label><br>
+
+<input type="radio" id="fbsn" name="fbs" value="0">
+<label for="fbsn">No</label><br>
+
+<h2>What is your cholesterol level (in mg/dl)?</h2>
+<input type="number" id="chol" name="chol" placeholder="Cholesterol level">
+
+<h2>What kind of chest pain do you have?</h2>
+{% for cp in cps %}
+<input type="radio" name="cp" id="cp{{ forloop.counter }}" value="{{ cp }}">
+<label for="cp{{ forloop.counter }}">{{ cp }}</label><br>
+{% endfor %}
+
+<h2>What is your resting blood pressure (systolic)?</h2>
+<input type="number" id="trtbps" name="trtbps" placeholder="Resting blood pressure" min="80" max="200">
+
+<h2>What are your resting electrocardiographic results?</h2>
+{% for ecg in ecgs %}
+<input type="radio" name="ecg" id="ecg{{ forloop.counter }}" value="{{ ecg }}">
+<label for="ecg{{ forloop.counter }}">{{ ecg }}</label><br>
+{% endfor %}
+
+<h2>Do you have thalassemia?</h2>
+{% for thall in thalls %}
+<input type="radio" name="thall" id="thall{{ forloop.counter }}" value="{{ thall }}">
+<label for="thall{{ forloop.counter }}">{{ thall }}</label><br>
+{% endfor %}
+
+<h2>What was the slope of the peak exercise ST segment?</h2>
+{% for slp in slps %}
+<input type="radio" name="slp" id="slp{{ forloop.counter }}" value="{{ slp }}">
+<label for="slp{{ forloop.counter }}">{{ slp }}</label><br>
 {% endfor %}
 
 <input type="submit" value="Submit">

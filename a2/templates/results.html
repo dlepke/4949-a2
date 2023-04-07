@@ -3,18 +3,18 @@
 {% block content %}
 <b>Results</b>
 
-<h3>Cocoa percent: {{cocoa_percent}}</h3>
-<h3>Number of ingredients: {{num_ingredients}}</h3>
-<h3>Ingredients:</h3>
-<ul>
-    {% for ingredient in ingredients %}
-    <li>{{ ingredient }}</li>
-    {% endfor %}
-</ul>
+<h3>Age: {{age}}</h3>
+<h3>Sex: {{sex}}</h3>
+<h3>Fasting blood sugar above 120 mg/dl: {{ fbs }}</h3>
+<h3>Cholesterol level: {{chol}}</h3>
+<h3>Chest pain: {{cp}}</h3>
+<h3>Resting blood pressure: {{trtbps}}</h3>
+<h3>Thalassemia: {{thal}}</h3>
+<h3>Peak ST slope: {{slp}}</h3>
 
 <br><br>
 
-<h2>Predicted rating: {{ prediction }} out of 5</h2>
+<h2>Assessment: {{ prediction }} </h2>
 
 
 {% endblock content %}
