@@ -1,21 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
-<b>Results</b>
+<div class="container p-5">
+<h1>Results</h1>
 
-<h3>Age: {{age}}</h3>
-<h3>Sex: {{sex}}</h3>
-<h3>Fasting blood sugar above 120 mg/dl: {{ fbs }}</h3>
-<h3>Cholesterol level: {{chol}}</h3>
-<h3>Chest pain: {{cp}}</h3>
-<h3>Resting blood pressure: {{trtbps}}</h3>
-<h3>Thalassemia: {{thal}}</h3>
-<h3>Peak ST slope: {{slp}}</h3>
+<p>Age: {{age}}</p>
+<p>Sex: {{sex}}</p>
+<p>Fasting blood sugar above 120 mg/dl: {{ fbs }}</p>
+<p>Cholesterol level: {{chol}}</p>
+<p>Chest pain: {{cp}}</p>
+<p>Resting blood pressure: {{trtbps}}</p>
+<p>Thalassemia: {{thal}}</p>
+<p>Peak ST slope: {{slp}}</p>
 
-<br><br>
+<div class="alert {% if prediction == 'Heart disease likely' %} alert-danger {% elif prediction == 'No heart disease' %}  }} alert-success {% endif %}">
+Assessment: {{ prediction }}
+</div>
 
-<h2>Assessment: {{ prediction }} </h2>
-
+<a class="btn btn-primary" href="{% url 'home' %}">Retake Survey</a>
+</div>
 
 {% endblock content %}
 

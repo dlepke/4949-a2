@@ -1,60 +1,99 @@
 {% extends "base.html" %}
 
 {% block content %}
-<b>Heart Health Survey</b>
+<style>
 
+</style>
+
+<div class="container p-5">
+<h1 class="">Heart Health Survey</h1>
+{% if errorMessage %}<div class="alert alert-danger"><strong>{{errorMessage}}</strong></div>{% endif %}
 <form action="{% url 'quizPost' %}" method="post">
 {% csrf_token %}
 
-<h2>What is your age?</h2>
-<input type="number" id="age" name="age" placeholder="Age in years" min="20" max="100">
+<div class="mb-3">
+    <label class="form-label">What is your age?</label><br>
+    <input class="form-control" type="number" id="age" name="age" placeholder="Age in years" min="20" max="100">
+</div>
 
-<h2>What is your sex?</h2>
-<input type="radio" id="sexf" name="sex" value="F">
-<label for="sexf">Female</label><br>
+<div class="mb-3">
+    <label class="form-label">What is your sex?</label>
+    <div class="form-check">
+        <input type="radio" class="form-check-input" id="sexf" name="sex" value="F">
+        <label for="sexf" class="form-check-label">Female</label><br>
+    </div>
 
-<input type="radio" id="sexm" name="sex" value="M">
-<label for="sexm">Male</label><br>
+    <div class="form-check">
+        <input type="radio" class="form-check-input" id="sexm" name="sex" value="M">
+        <label for="sexm" class="form-check-label">Male</label><br>
+    </div>
+</div>
 
-<h2>Is your fasting blood sugar above 120 mg/dl?</h2>
-<input type="radio" id="fbsy" name="fbs" value="1">
-<label for="fbsy">Yes</label><br>
+<div class="mb-3">
+    <label class="form-label">Is your fasting blood sugar above 120 mg/dl?</label>
+    <div class="form-check">
+        <input type="radio" class="form-check-input" id="fbsy" name="fbs" value="1">
+        <label for="fbsy" class="form-check-label">Yes</label><br>
+    </div>
 
-<input type="radio" id="fbsn" name="fbs" value="0">
-<label for="fbsn">No</label><br>
+    <div class="form-check">
+        <input type="radio" class="form-check-input" id="fbsn" name="fbs" value="0">
+        <label for="fbsn" class="form-check-label">No</label><br>
+    </div>
+</div>
 
-<h2>What is your cholesterol level (in mg/dl)?</h2>
-<input type="number" id="chol" name="chol" placeholder="Cholesterol level">
+<div class="mb-3">
+<label class="form-label">What is your cholesterol level (in mg/dl)?</label><br>
+<input class="form-control" type="number" id="chol" name="chol" placeholder="Cholesterol level">
+</div>
 
-<h2>What kind of chest pain do you have?</h2>
+<div class="mb-3">
+<label class="form-label">What kind of chest pain do you have?</label>
 {% for cp in cps %}
-<input type="radio" name="cp" id="cp{{ forloop.counter }}" value="{{ cp }}">
-<label for="cp{{ forloop.counter }}">{{ cp }}</label><br>
+<div class="form-check">
+<input type="radio" class="form-check-input" name="cp" id="cp{{ forloop.counter }}" value="{{ cp }}">
+<label for="cp{{ forloop.counter }}" class="form-check-label">{{ cp }}</label><br>
+</div>
 {% endfor %}
+</div>
 
-<h2>What is your resting blood pressure (systolic)?</h2>
-<input type="number" id="trtbps" name="trtbps" placeholder="Resting blood pressure" min="80" max="200">
+<div class="mb-3">
+<label class="form-label">What is your resting blood pressure (systolic)?</label><br>
+<input class="form-control" type="number" id="trtbps" name="trtbps" placeholder="Resting blood pressure" min="80" max="200">
+</div>
 
-<h2>What are your resting electrocardiographic results?</h2>
+<div class="mb-3">
+<label class="form-label">What are your resting electrocardiographic results?</label>
 {% for ecg in ecgs %}
-<input type="radio" name="ecg" id="ecg{{ forloop.counter }}" value="{{ ecg }}">
-<label for="ecg{{ forloop.counter }}">{{ ecg }}</label><br>
+<div class="form-check">
+<input type="radio" class="form-check-input" name="ecg" id="ecg{{ forloop.counter }}" value="{{ ecg }}">
+<label for="ecg{{ forloop.counter }}" class="form-check-label">{{ ecg }}</label><br>
+</div>
 {% endfor %}
+</div>
 
-<h2>Do you have thalassemia?</h2>
+<div class="mb-3">
+<label class="form-label">Do you have thalassemia?</label>
 {% for thall in thalls %}
-<input type="radio" name="thall" id="thall{{ forloop.counter }}" value="{{ thall }}">
-<label for="thall{{ forloop.counter }}">{{ thall }}</label><br>
+<div class="form-check">
+<input type="radio" class="form-check-input" name="thall" id="thall{{ forloop.counter }}" value="{{ thall }}">
+<label for="thall{{ forloop.counter }}" class="form-check-label">{{ thall }}</label><br>
+</div>
 {% endfor %}
+</div>
 
-<h2>What was the slope of the peak exercise ST segment?</h2>
+<div class="mb-3">
+<label class="form-label">What was the slope of the peak exercise ST segment?</label>
 {% for slp in slps %}
-<input type="radio" name="slp" id="slp{{ forloop.counter }}" value="{{ slp }}">
-<label for="slp{{ forloop.counter }}">{{ slp }}</label><br>
+<div class="form-check">
+<input type="radio" class="form-check-input" name="slp" id="slp{{ forloop.counter }}" value="{{ slp }}">
+<label for="slp{{ forloop.counter }}" class="form-check-label">{{ slp }}</label><br>
+</div>
 {% endfor %}
+</div>
 
-<input type="submit" value="Submit">
+<input type="submit" value="Submit" class="btn btn-primary">
 </form>
+</div>
 
-{% if errorMessage %}<p><strong>{{errorMessage}}</strong></p>{% endif %}
 {% endblock content %}

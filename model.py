@@ -1,7 +1,5 @@
 import pandas as pd
-import numpy as np
 from matplotlib import pyplot as plt
-from sklearn import metrics
 import pickle
 from sklearn.impute import KNNImputer
 from sklearn.model_selection import train_test_split
@@ -21,7 +19,6 @@ df = pd.read_csv('heart.csv', skiprows=1, names=(
     'thalachh', 'exng', 'oldpeak', 'slp', 'caa', 'thall', 'output'
 ))
 
-# X = df[['fbs', 'chol', 'restecg', 'trtbps', 'age', 'sex', 'thall', 'slp', 'caa', 'thalachh']]
 X = df.copy()
 del X['output']
 

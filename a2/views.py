@@ -9,7 +9,7 @@ import pandas as pd
 
 
 def homePageView(request):
-	return render(request, 'quiz.html', {
+	return render(request, 'home.html', {
 		'cps': ['Typical angina', 'Atypical angina', 'Non-anginal pain', 'Asymptomatic'],
 		'ecgs': ['Normal', 'ST-T wave abnormality', 'Probable or definite left ventricular hypertrophy'],
 		'thalls': ['Fixed defect', 'Normal blood flow', 'Reversible defect'],
