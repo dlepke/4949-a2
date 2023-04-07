@@ -19,13 +19,15 @@ df = pd.read_csv('heart.csv', skiprows=1, names=(
     'thalachh', 'exng', 'oldpeak', 'slp', 'caa', 'thall', 'output'
 ))
 
+df['sex'].replace([0, 1], ['F', 'M'], inplace=True)
+df['cp'].replace([0, 1, 2, 3], ['typical_angina', 'atypical_angina', 'non-anginal_pain', 'asymptomatic'], inplace=True)
+df['restecg'].replace([0, 1, 2], ['normal', 'stt_abnormal', 'hypertrophy'], inplace=True)
+df['thall'].replace([0, 1, 2, 3], ['NULL', 'fixed', 'normal', 'reversible'], inplace=True)
+df['slp'].replace([0, 1, 2], ['down', 'flat', 'up'], inplace=True)
+df['exng'].replace([0, 1], ['no', 'yes'], inplace=True)
+
 X = df.copy()
 del X['output']
-
-X['cp'].replace([0, 1, 2, 3], ['typical_angina', 'atypical_angina', 'non-anginal_pain', 'asymptomatic'], inplace=True)
-X['restecg'].replace([0, 1, 2], ['normal', 'stt_abnormal', 'hypertrophy'], inplace=True)
-X['thall'].replace([0, 1, 2, 3], ['NULL', 'fixed', 'normal', 'reversible'], inplace=True)
-X['slp'].replace([0, 1, 2], ['down', 'flat', 'up'], inplace=True)
 
 del X['caa']
 del X['oldpeak']
@@ -45,6 +47,20 @@ X = imputer.fit_transform(X)
 
 X = pd.DataFrame(X, columns=columns)
 
+heart_disease = df[df['output'] == 0]
+no_disease = df[df['output'] == 1]
+
+plt.figure(figsize=(22, 15))
+
+for i in range(len(df.columns) - 1):
+    col = df.columns[i]
+    plt.subplot(4, 4, i + 1)
+    plt.hist([heart_disease[col], no_disease[col]], rwidth=0.8)
+    plt.legend(['Heart disease', 'No heart disease'])
+    plt.title(col)
+
+plt.show()
+
 ffs = f_classif(X, y)
 
 features = pd.DataFrame()
@@ -54,19 +70,17 @@ for i in range(len(X.columns)):
 features = features.sort_values(by=['ffs'])
 print(features)
 
-print(X.columns)
-
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
 model = LogisticRegression(fit_intercept=True, solver='liblinear', random_state=0)
 
 model.fit(X_train, y_train)
 
-# with open('model.pkl', 'wb') as files:
-#     pickle.dump(model, files)
-#
-# with open('model.pkl', 'rb') as f:
-#     loaded = pickle.load(f)
+with open('model.pkl', 'wb') as files:
+    pickle.dump(model, files)
+
+with open('model.pkl', 'rb') as f:
+    loaded = pickle.load(f)
 
 predictions = model.predict(X_test)
 

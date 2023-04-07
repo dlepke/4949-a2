@@ -83,7 +83,7 @@ def resultsView(request):
 		'restecg': restecg,
 		'thal': thall,
 		'slp': slp,
-		'prediction': 'Heart disease likely' if prediction[0] == 0 else "No heart disease"
+		'prediction': 'Heart disease likely' if prediction[0] == 1 else "No heart disease"
 	})
 
 
